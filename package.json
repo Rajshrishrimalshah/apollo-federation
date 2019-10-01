@@ -1,0 +1,31 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gateway.js",
+  "scripts": {
+    "start-gateway": "nodemon --exec babel-node gateway.js",
+    "start-service-accounts": "concurrently \"cd services/persons && npm start\"",
+    "start-service-reviews": "concurrently \"cd services/cities && npm start\"",
+    "start-service-products": "concurrently \"cd services/companies && npm start\"",
+    "start-service-inventory": "concurrently \"cd services/addresses && npm start\"",
+    "start-services": "concurrently \"npm:start-service-*\"",
+    "postinstall": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "concurrently": "latest",
+    "lerna": "latest",
+    "nodemon": "^1.19.2"
+  },
+  "dependencies": {
+    "@apollo/gateway": "latest",
+    "apollo-server": "latest",
+    "graphql": "latest"
+  },
+  "author": "",
+  "license": "ISC"
+}
