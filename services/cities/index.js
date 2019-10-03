@@ -6,9 +6,18 @@ const typeDefs = gql`
     cityId: ID
     cityName: String
   }
+
+  extend type Query {
+    cities(first: Int = 5): [City]
+  }
 `;
 
 const resolvers = {
+  Query: {
+    cities(_, args) {
+      return cities.slice(0, args.first)
+    }
+  },
   City: {
     async __resolveReference(object) {
       const res = await cities.find(
@@ -41,11 +50,11 @@ const cities = [
   {
     addressId: "1001",
     cityId: "49",
-    cityName: "Pune"
+    cityName: "Delhi"
   },
   {
     addressId: "1002",
     cityId: "50",
-    cityName: "Pune"
+    cityName: "Mumbai"
   }
 ];

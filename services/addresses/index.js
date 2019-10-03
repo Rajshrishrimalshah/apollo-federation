@@ -2,6 +2,10 @@ import { ApolloServer, gql } from "apollo-server";
 import { buildFederatedSchema } from "@apollo/federation";
 
 const typeDefs = gql`
+  extend type Query {
+    addresses(first: Int = 5): [Address]
+  }
+
   type Address @key(fields: "addressId") {
     addressId: ID
     addressName: String
@@ -14,6 +18,12 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  Query: {
+    addresses(_, args) {
+      console.log('Inside Address Query');
+      return addresses.slice(0, args.first);
+    }
+  },
   Address: {
     async __resolveReference(object) {
       const res = await addresses.find(

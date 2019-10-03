@@ -3,7 +3,6 @@ import { buildFederatedSchema } from "@apollo/federation";
 
 const typeDefs = gql`
   extend type Query {
-    person: Person
     persons(first: Int = 5): [Person]
   }
 
@@ -20,9 +19,6 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    person() {
-      return persons[0];
-    },
     persons(_, args) {
       return persons.slice(0, args.first);
     }
