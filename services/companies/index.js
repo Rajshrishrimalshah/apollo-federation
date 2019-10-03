@@ -2,48 +2,39 @@ import { ApolloServer, gql } from "apollo-server";
 import { buildFederatedSchema } from "@apollo/federation";
 
 const typeDefs = gql`
-
+  extend type Query {
+    companies(first: Int = 5): [Company]
+  }
   type Company @key(fields: "companyId") {
-    companyId: ID!
-    name: String
-    person: Person
+    companyId: ID
+    companyName: String
+    address: Address
   }
 
-  extend type Person @key(fields : "id") {
-    id: ID! @external
-    company: Company
+  extend type Address @key(fields: "addressId") {
+    addressId: ID @external
   }
 
-  type NewCompany @key(fields: "id") {
-    id: ID!
-    companyId: ID!
-    name: String
-    person: Person
-  }
 `;
 
 const resolvers = {
-  Person: {
-    company(object) {
-        return companies.find(company => company.id === object.id);
-      
+  Query: {
+    companies(_, args) {
+      return companies.slice(0, args.first);
     }
   },
   Company: {
     async __resolveReference(object) {
-      console.log('object', object)
-      const res = await persons.find(person => person.id === object.id);
+      const res = await companies.find(
+        company => company.companyId === object.companyId
+      );
       return res;
     },
-},
-NewCompany: {
-  async __resolveReference(object) {
-    console.log('NewCompany', object)
-    const res = await companies.find(company => company.id === company.id);
-    return res;
-  },
-}
-}
+    address(object) {
+      return { __typename: "Address", addressId: object.addressId };
+    }
+  }
+};
 
 const server = new ApolloServer({
   schema: buildFederatedSchema([
@@ -58,32 +49,30 @@ server.listen({ port: 4003 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
 
-
-
 const companies = [
   {
-    id: "1",
     companyId: "100",
-    name: "Successive Technologies",
+    companyName: "Successive Technologies",
+    addressId: "1000"
   },
   {
-    id: "2",
     companyId: "100",
-    name: "Successive Technologies",
+    companyName: "Successive Technologies",
+    addressId: "1000"
   },
   {
-    id: "3",
     companyId: "101",
-    name: "Dentsu Aegis Network",
+    companyName: "Dentsu Aegis Network",
+    addressId: "1001"
   },
   {
-    id: "4",
     companyId: "101",
-    name: "Dentsu Aegis Network",
+    companyName: "Dentsu Aegis Network",
+    addressId: "1001"
   },
   {
-    id: "5",
     companyId: "102",
-    name: "Parker Consultancy",
+    companyName: "Parker Consultancy",
+    addressId: "1002"
   }
 ];

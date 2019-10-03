@@ -2,22 +2,27 @@ import { ApolloServer, gql } from "apollo-server";
 import { buildFederatedSchema } from "@apollo/federation";
 
 const typeDefs = gql`
-  extend type Company @key(fields: "companyId") {
-    companyId: ID! @external
-    address: Address
+  type Address @key(fields: "addressId") {
+    addressId: ID
+    addressName: String
+    city: City
   }
 
-  type Address @key(fields : "addressId"){
-    addressId: ID!
-    name: String
+  extend type City @key(fields: "cityId") {
+    cityId: ID @external
   }
-
 `;
 
 const resolvers = {
-  Company: {
-    address(object) {
-      return addresses.find(add => add.companyId === object.companyId);
+  Address: {
+    async __resolveReference(object) {
+      const res = await addresses.find(
+        address => address.addressId === object.addressId
+      );
+      return res;
+    },
+    city(object) {
+      return { __typename: "City", cityId: object.cityId };
     }
   }
 };
@@ -37,19 +42,18 @@ server.listen({ port: 4004 }).then(({ url }) => {
 
 const addresses = [
   {
-    companyId: '100',
-    addressId: '1000',
-    name: '@Creaticity Mall, Near Golf Course'
+    addressId: "1000",
+    addressName: "@Creaticity Mall, Near Golf Course",
+    cityId: "48"
   },
   {
-    companyId: '101',
-    addressId: '1001',
-    name: '@Inorbit Mall, Kalyani Nagar'
+    addressId: "1001",
+    addressName: "@Inorbit Mall, Kalyani Nagar",
+    cityId: "49"
   },
   {
-    companyId: '102',
-    addressId: '1002',
-    name: '@Cyber Link, Swargate'
+    addressId: "1002",
+    addressName: "@Cyber Link, Swargate",
+    cityId: "50"
   }
-
 ];
