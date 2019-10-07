@@ -2,9 +2,9 @@ import { ApolloServer, gql } from "apollo-server";
 import { buildFederatedSchema } from "@apollo/federation";
 
 const typeDefs = gql`
-  type City @key(fields: "cityId") {
-    cityId: ID
-    cityName: String
+  type City @key(fields: "id") {
+    id: ID
+    name: String
   }
 
   extend type Query {
@@ -21,7 +21,7 @@ const resolvers = {
   City: {
     async __resolveReference(object) {
       const res = await cities.find(
-        city => city.cityId === object.cityId
+        city => city.id === object.id
       );
       return res;
     }
@@ -43,18 +43,18 @@ server.listen({ port: 4002 }).then(({ url }) => {
 
 const cities = [
   {
-    addressId: "1000",
-    cityId: "48",
-    cityName: "Pune"
+    id: "48",
+    name: "Scotland",
+    addressId: "1000"
   },
   {
-    addressId: "1001",
-    cityId: "49",
-    cityName: "Delhi"
+    id: "49",
+    name: "England",
+    addressId: "1001"
   },
   {
-    addressId: "1002",
-    cityId: "50",
-    cityName: "Mumbai"
+    id: "50",
+    name: "Cardiff",
+    addressId: "1002"
   }
 ];

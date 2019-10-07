@@ -6,33 +6,32 @@ const typeDefs = gql`
     addresses(first: Int = 5): [Address]
   }
 
-  type Address @key(fields: "addressId") {
-    addressId: ID
-    addressName: String
+  type Address @key(fields: "id") {
+    id: ID
+    name: String
     city: City
   }
 
-  extend type City @key(fields: "cityId") {
-    cityId: ID @external
+  extend type City @key(fields: "id") {
+    id: ID @external
   }
 `;
 
 const resolvers = {
   Query: {
     addresses(_, args) {
-      console.log('Inside Address Query');
       return addresses.slice(0, args.first);
     }
   },
   Address: {
     async __resolveReference(object) {
       const res = await addresses.find(
-        address => address.addressId === object.addressId
+        address => address.id === object.id
       );
       return res;
     },
     city(object) {
-      return { __typename: "City", cityId: object.cityId };
+      return { __typename: "City", id: object.cityId };
     }
   }
 };
@@ -52,18 +51,18 @@ server.listen({ port: 4004 }).then(({ url }) => {
 
 const addresses = [
   {
-    addressId: "1000",
-    addressName: "@Creaticity Mall, Near Golf Course",
+    id: "1000",
+    name: "Edinburgh",
     cityId: "48"
   },
   {
-    addressId: "1001",
-    addressName: "@Inorbit Mall, Kalyani Nagar",
+    id: "1001",
+    name: "Brighton",
     cityId: "49"
   },
   {
-    addressId: "1002",
-    addressName: "@Cyber Link, Swargate",
+    id: "1002",
+    name: "Roath",
     cityId: "50"
   }
 ];

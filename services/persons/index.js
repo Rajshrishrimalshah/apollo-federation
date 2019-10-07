@@ -7,13 +7,13 @@ const typeDefs = gql`
   }
 
   type Person {
-    personId: ID
-    personName: String
+    id: ID
+    name: String
     company: Company
   }
 
-  extend type Company @key(fields: "companyId") {
-    companyId: ID @external
+  extend type Company @key(fields: "id") {
+    id: ID @external
   }
 `;
 
@@ -25,7 +25,7 @@ const resolvers = {
   },
   Person: {
     company(object) {
-      return { __typename: "Company", companyId: object.companyId };
+      return { __typename: "Company", id: object.companyId };
     }
   }
 };
@@ -45,28 +45,28 @@ server.listen({ port: 4001 }).then(({ url }) => {
 
 const persons = [
   {
-    personId: "1",
-    personName: "Mayank",
+    id: "1",
+    name: "Alex",
     companyId: "100"
   },
   {
-    personId: "2",
-    personName: "Krishna",
+    id: "2",
+    name: "Bob",
     companyId: "100",
   },
   {
-    personId: "3",
-    personName: "Mangesh",
+    id: "3",
+    name: "Simon",
     companyId: "101",
   },
   {
-    personId: "4",
-    personName: "Leena",
+    id: "4",
+    name: "Jack",
     companyId: "102",
   },
   {
-    personId: "5",
-    personName: "Trupti",
+    id: "5",
+    name: "Mike",
     companyId: "102",
   }
 ];

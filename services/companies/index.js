@@ -5,14 +5,14 @@ const typeDefs = gql`
   extend type Query {
     companies(first: Int = 5): [Company]
   }
-  type Company @key(fields: "companyId") {
-    companyId: ID
-    companyName: String
+  type Company @key(fields: "id") {
+    id: ID
+    name: String
     address: Address
   }
 
-  extend type Address @key(fields: "addressId") {
-    addressId: ID @external
+  extend type Address @key(fields: "id") {
+    id: ID @external
   }
 
 `;
@@ -26,12 +26,12 @@ const resolvers = {
   Company: {
     async __resolveReference(object) {
       const res = await companies.find(
-        company => company.companyId === object.companyId
+        company => company.id === object.id
       );
       return res;
     },
     address(object) {
-      return { __typename: "Address", addressId: object.addressId };
+      return { __typename: "Address", id: object.addressId };
     }
   }
 };
@@ -51,28 +51,28 @@ server.listen({ port: 4003 }).then(({ url }) => {
 
 const companies = [
   {
-    companyId: "100",
-    companyName: "Successive Technologies",
+    id: "100",
+    name: "Google",
     addressId: "1000"
   },
   {
-    companyId: "100",
-    companyName: "Successive Technologies",
+    id: "100",
+    name: "Microsoft",
     addressId: "1000"
   },
   {
-    companyId: "101",
-    companyName: "Dentsu Aegis Network",
+    id: "101",
+    name: "Dentsu Aegis Network",
     addressId: "1001"
   },
   {
-    companyId: "101",
-    companyName: "Dentsu Aegis Network",
+    id: "101",
+    name: "Facebook",
     addressId: "1001"
   },
   {
-    companyId: "102",
-    companyName: "Parker Consultancy",
+    id: "102",
+    name: "Tesla",
     addressId: "1002"
   }
 ];
